@@ -79,11 +79,7 @@
         <li><a href="#apply-form" data-key="nav-apply">Apply Online</a></li>
         <li><a href="#faq-section" data-key="nav-faq">FAQs</a></li>
       </ul>
-      <div class="nav-settings">
-        <button id="open-config" class="settings-btn" aria-label="Configure Sheets Link" title="Google Sheets Setup">
-          <i class="fa-solid fa-gear"></i>
-        </button>
-      </div>
+
     </div>
   </nav>
 
@@ -624,7 +620,7 @@
           <li><a href="#how-to-apply">Eligibility Guidelines</a></li>
           <li><a href="#apply-form">New Registration</a></li>
           <li><a href="#faq-section">Frequently Asked Questions</a></li>
-          <li><a href="#" id="open-config-foot">Developer / Sheet Settings</a></li>
+
         </ul>
       </div>
       <div class="footer-col">
@@ -658,41 +654,7 @@
     </div>
   </footer>
 
-  <!-- 9. GOOGLE SHEET DEVELOPER/ADMIN CONFIG MODAL -->
-  <div class="modal" id="config-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="modal-title"><i class="fa-solid fa-gears"></i> Developer Settings: Google Sheet Integration</h3>
-        <button id="close-config" class="close-modal" aria-label="Close settings">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">
-          Set up the Google Sheets integration to save all scholarship form submissions to your designated spreadsheet.
-        </p>
-        <div class="form-group" style="margin-bottom: 15px;">
-          <label style="font-size:0.8rem;">Current Linked Spreadsheet:</label>
-          <a href="https://docs.google.com/spreadsheets/d/1f1UiPl_93apUQwGesImkawkr-zZWeCeocnN9zuR9Zt8/" target="_blank" style="font-size:0.75rem; color:var(--primary); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:5px;">
-            Open Google Spreadsheet <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          </a>
-        </div>
-        <div class="form-group">
-          <label for="appsScriptUrl" style="font-size:0.85rem; font-weight:600;">Google Apps Script Web App URL <span class="required">*</span></label>
-          <input type="url" id="appsScriptUrl" class="form-control" placeholder="https://script.google.com/macros/s/xxxxxx/exec" style="font-size:0.8rem;">
-          <span class="field-hint">
-            To get this URL, open the Google Sheet, go to Extensions -> Apps Script, paste the code in `google-apps-script.js`, and Deploy it as a Web App (Access: Anyone).
-          </span>
-        </div>
-        <div class="form-group" style="margin-top: 15px; display:flex; align-items:center; gap:8px;">
-          <input type="checkbox" id="simulatedCheck" style="width:16px; height:16px; cursor:pointer;">
-          <label for="simulatedCheck" style="font-size:0.75rem; font-weight:500; cursor:pointer;">Simulate Google Sheet writes locally if Apps Script URL is blank.</label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button id="cancel-config" class="btn btn-secondary" style="padding: 6px 15px; font-size:0.8rem;">Cancel</button>
-        <button id="save-config" class="btn btn-success" style="padding: 6px 15px; font-size:0.8rem;"><i class="fa-solid fa-floppy-disk"></i> Save Configuration</button>
-      </div>
-    </div>
-  </div>
+
 
   <script src="script.js"></script>
 </body>

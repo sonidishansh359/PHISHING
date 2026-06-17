@@ -218,39 +218,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  // --- DEVELOPER / GOOGLE SHEETS CONFIG MODAL ---
-  const configModal = document.getElementById("config-modal");
-  const openConfig = document.getElementById("open-config");
-  const openConfigFoot = document.getElementById("open-config-foot");
-  const closeConfig = document.getElementById("close-config");
-  const cancelConfig = document.getElementById("cancel-config");
-  const saveConfig = document.getElementById("save-config");
-  const appsScriptUrlInput = document.getElementById("appsScriptUrl");
-  const simulatedCheck = document.getElementById("simulatedCheck");
-
-  // Load from LocalStorage
-  const loadConfig = () => {
-    const url = localStorage.getItem("googleAppsScriptUrl") || "";
-    const simulate = localStorage.getItem("simulateSheetsLocal") !== "false"; // default true if not set
-    appsScriptUrlInput.value = url;
-    simulatedCheck.checked = simulate;
-  };
-  loadConfig();
-
-  const openModal = () => configModal.classList.add("active");
-  const closeModal = () => configModal.classList.remove("active");
-
-  openConfig.addEventListener("click", openModal);
-  if (openConfigFoot) openConfigFoot.addEventListener("click", (e) => { e.preventDefault(); openModal(); });
-  closeConfig.addEventListener("click", closeModal);
-  cancelConfig.addEventListener("click", closeModal);
-  
-  saveConfig.addEventListener("click", () => {
-    localStorage.setItem("googleAppsScriptUrl", appsScriptUrlInput.value.trim());
-    localStorage.setItem("simulateSheetsLocal", simulatedCheck.checked);
-    closeModal();
-    alert("Configuration Saved Successfully!");
-  });
+  // --- GOOGLE APPS SCRIPT WEB APP CONFIGURATION ---
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUB_T4L3MXXkQCdMyf11rFdYcDLQ9yCWCYREwnBNwm_AF0AtIJzjkCgSHW48uqGDow/exec";
 
 
   // --- FORM STEP NAVIGATOR & VALIDATION ---
@@ -496,10 +465,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const originalBtnHTML = submitBtn.innerHTML;
     submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting to Govt database...`;
 
-    // Fetch integration URL
-    const appsScriptUrl = localStorage.getItem("googleAppsScriptUrl") || "";
-    const simulateLocal = localStorage.getItem("simulateSheetsLocal") !== "false";
-
     const finalizeSubmission = () => {
       // Save data locally in localStorage list for offline tracking/history
       const applications = JSON.parse(localStorage.getItem("nsp_applications") || "[]");
@@ -537,72 +502,32 @@ document.addEventListener("DOMContentLoaded", () => {
       window.scrollTo({ top: receiptWrapper.offsetTop - 50, behavior: 'smooth' });
     };
 
-    if (appsScriptUrl !== "") {
-      let cleanedUrl = appsScriptUrl.trim();
+    // Create an AbortController for a 8-second timeout fallback
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+    }, 8000);
 
-      // 1. Auto-correction: If they pasted just the Deployment ID (e.g., "AKfycybyUB...")
-      if (/^AKfy[a-zA-Z0-9_-]+$/.test(cleanedUrl)) {
-        cleanedUrl = "https://script.google.com/macros/s/" + cleanedUrl + "/exec";
-      }
-
-      // 2. Auto-correction: If they pasted the Web App URL but left off "/exec" at the end
-      if (cleanedUrl.includes("script.google.com/macros/s/") && !cleanedUrl.toLowerCase().includes("/exec")) {
-        cleanedUrl = cleanedUrl.replace(/\/+$/, "") + "/exec";
-      }
-
-      // Update the settings input and localStorage with the corrected URL
-      localStorage.setItem("googleAppsScriptUrl", cleanedUrl);
-      const appsScriptUrlInput = document.getElementById("appsScriptUrl");
-      if (appsScriptUrlInput) {
-        appsScriptUrlInput.value = cleanedUrl;
-      }
-
-      // 3. Final validation check
-      const isValidAppsScriptUrl = cleanedUrl.includes("script.google.com/macros/s/") && cleanedUrl.toLowerCase().includes("/exec");
-      
-      if (!isValidAppsScriptUrl) {
-        alert("⚠️ Configuration Error:\nThe URL you pasted in Developer Settings is not a Google Web App URL. It looks like you pasted a Spreadsheet URL or Script Editor URL.\n\nPlease copy the 'Web app URL' ending with '/exec' from the Apps Script deploy popup. Falling back to local storage submission.");
-        finalizeSubmission();
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnHTML;
-        return;
-      }
-
-      // Create an AbortController for a 8-second timeout fallback
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => {
-        controller.abort();
-      }, 8000);
-
-      // Send data to Google Sheet Apps Script
-      fetch(cleanedUrl, {
-        method: "POST",
-        mode: "no-cors", // Required to bypass Apps Script redirect CORS issues. Write will still succeed!
-        headers: {
-          "Content-Type": "text/plain" // Allowed in no-cors, prevents browser from stripping the payload
-        },
-        body: JSON.stringify(formData),
-        signal: controller.signal
-      })
-      .then(() => {
-        clearTimeout(timeoutId);
-        finalizeSubmission();
-      })
-      .catch(err => {
-        clearTimeout(timeoutId);
-        console.error("Submission error details:", err);
-        alert("Notice: Could not connect to Google Apps Script Web App (this can happen if you are logged into multiple Google accounts or the connection timed out). Saving application details locally.");
-        finalizeSubmission();
-      });
-    } else {
-      // Simulate submission
-      setTimeout(() => {
-        finalizeSubmission();
-        if (!simulateLocal) {
-          alert("Notice: No Google Apps Script URL was configured. Application has been saved locally.");
-        }
-      }, 1500);
-    }
+    // Send data to Google Sheet Apps Script
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors", // Required to bypass Apps Script redirect CORS issues. Write will still succeed!
+      headers: {
+        "Content-Type": "text/plain" // Allowed in no-cors, prevents browser from stripping the payload
+      },
+      body: JSON.stringify(formData),
+      signal: controller.signal
+    })
+    .then(() => {
+      clearTimeout(timeoutId);
+      finalizeSubmission();
+    })
+    .catch(err => {
+      clearTimeout(timeoutId);
+      console.error("Submission error details:", err);
+      alert("Notice: Could not connect to Google Apps Script Web App (this can happen if you are logged into multiple Google accounts or the connection timed out). Saving application details locally.");
+      finalizeSubmission();
+    });
   });
 
 
