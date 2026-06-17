@@ -219,6 +219,10 @@ body {
   box-shadow: var(--shadow-md);
 }
 
+.nav-toggle {
+  display: none;
+}
+
 .nav-container {
   max-width: 90%;
   margin: 0 auto;
@@ -1485,11 +1489,47 @@ body {
     display: none; /* Hide flags/badges on small screens */
   }
   .nav-container {
-    max-width: 95%;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .nav-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 15px 5%;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: var(--transition);
+  }
+  .nav-toggle:hover {
+    background: var(--primary-hover);
+    color: var(--saffron);
+  }
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: var(--primary-hover);
+  }
+  .nav-links.active {
+    display: flex;
+  }
+  .nav-links li {
+    width: 100%;
   }
   .nav-links a {
-    padding: 12px 10px;
-    font-size: 0.85rem;
+    width: 100%;
+    padding: 12px 5%;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
   .form-grid {
     grid-template-columns: 1fr;
@@ -1528,6 +1568,98 @@ body {
   .footer-bottom {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .accessibility-bar {
+    flex-direction: column;
+    gap: 5px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .acc-right {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  .size-controls, .theme-controls {
+    border-right: none;
+    padding-right: 0;
+    justify-content: center;
+    width: 100%;
+  }
+  .main-header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    text-align: center;
+  }
+  .logo-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .emblem-img {
+    height: 55px;
+  }
+  .logo-text h1 {
+    font-size: 1.1rem;
+  }
+  .logo-text p {
+    font-size: 0.65rem;
+  }
+  .hero-text-side {
+    padding: 20px 15px;
+  }
+  .hero-text-side h2 {
+    font-size: 1.35rem;
+  }
+  .hero-desc {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding-top: 15px;
+  }
+  .stat-card {
+    padding: 10px;
+  }
+  .stat-num {
+    font-size: 1.4rem;
+  }
+  .info-card {
+    padding: 20px 15px;
+  }
+  .form-container {
+    padding: 20px 15px;
+  }
+  .step-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+  .steps-indicator {
+    padding: 10px 15px;
+  }
+  .captcha-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .captcha-input-group {
+    width: 100%;
+  }
+  .form-actions {
+    gap: 10px;
+  }
+  .btn {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+  .receipt-card {
+    padding: 20px 15px;
   }
 }
 
